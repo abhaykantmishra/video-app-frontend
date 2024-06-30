@@ -9,7 +9,7 @@ function RootLayout() {
   const [isAuthenticate , setAuth] = useState(false)
   const navigate = useNavigate();
   const pathname = window.location.pathname;
-  const verifyUrl = "/api/v1/user/verifyuser"
+  const verifyUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/verifyuser"
   useEffect( ()=>{
     const token = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("userId");
