@@ -26,7 +26,7 @@ const Detail = () => {
   const videoRef = useRef(null);
 
   const checkLike = async () => {
-    await axios.post('/api/v1/video/check-like',{
+    await axios.post('https://video-app-backend-s7qn.onrender.com/api/v1/video/check-like',{
       userId:localStorage.getItem("userId"),
       videoId:videoId
     }).then((res)=>{
@@ -42,7 +42,7 @@ const Detail = () => {
   
 
   const getVideoInfo = async () => {
-    await axios.post("/api/v1/video/getvideobyid",{videoId:videoId})
+    await axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/video/getvideobyid",{videoId:videoId})
     .then(async (res)=>{
       setVideoInfo(res.data.video);
       setlikecnt(res.data.video.likes);
@@ -76,7 +76,7 @@ const Detail = () => {
 
 
   const likedByUser = ()=>{
-    axios.post("/api/v1/video/likedbyuser",{
+    axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/video/likedbyuser",{
       userId:localStorage.getItem("userId"), videoId:videoId 
     })
     .then((res)=>{
@@ -89,7 +89,7 @@ const Detail = () => {
   }
 
   const unlikedByUser = ()=>{
-    axios.post("/api/v1/video/unlikedbyuser",{
+    axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/video/unlikedbyuser",{
       userId:localStorage.getItem("userId"), videoId:videoId 
     })
     .then((res)=>{
