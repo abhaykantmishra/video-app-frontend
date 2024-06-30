@@ -12,7 +12,7 @@ const GuestIds = () => {
     const [isLoading,setLoading] = useState(false)
 
     const getAllGuestusers = async () => {
-        await axios.get("/api/v1/user/getguestusers")
+        await axios.get("https://video-app-backend-s7qn.onrender.com/api/v1/user/getguestusers")
         .then((res) => {
             const allGuestUsers = res.data.allGuestUsers;
             setGuestUsers(allGuestUsers)
