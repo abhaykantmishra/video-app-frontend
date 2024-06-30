@@ -8,7 +8,7 @@ import { loginUser } from '../utils/functions';
 
 
 function SignUpPage() {
-    const signupUrl = "/api/v1/user/register"
+    const signupUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/register"
     const navigate = useNavigate();
     const [name , setName] = useState("");
     const [username , setUsername] = useState("");
@@ -40,7 +40,7 @@ function SignUpPage() {
 
     const guestLoginHandler = async (e) => {
         e.preventDefault();
-        await axios.get("/api/v1/user/getguestusers")
+        await axios.get("https://video-app-backend-s7qn.onrender.com/api/v1/user/getguestusers")
         .then((res) => {
             navigate('/guestids');
         })
