@@ -18,7 +18,7 @@ import GuestIds from "./pages/GuestIds";
 function App() {
   const [videos,setAllVideos] = useState() 
   async function getAllVideos(){
-    await axios.get("/api/v1/video/getallvideos")
+    await axios.get("https://video-app-backend-s7qn.onrender.com/api/v1/video/getallvideos")
     .then((res)=>{ 
        setAllVideos([...res.data.allVideos])
     })
