@@ -15,9 +15,11 @@ import { useEffect, useState } from 'react';
 
 function PostForm( {post} ) {
     const navigate = useNavigate();
-    const pathname = window.location.pathname;
-    const uploadVideoUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/video/uploadvideo"
 
+    const uploadVideoUrl = "/api/v1/video/uploadvideo"
+
+    const [isLoading,setLoading] = useState(false)
+    const [formMsg,setFormMsg] = useState('');
     const [title , setTitle ] = useState("");
     const [description , setDescription ] = useState("");
     const [category , setCategory ] = useState("");
@@ -27,10 +29,15 @@ function PostForm( {post} ) {
     const [clear,setClear] = useState(false)
     
     const createPost = async (e)=>{
+        setLoading(true)
         const token = localStorage.getItem("accessToken") 
         const user = localStorage.getItem("user")
-        if(!title || !description || !file || !category ){
-          console.log("please provide mandetory fields!")
+        if(!title || !description || !file || !category || !location || !tags){
+          e.preventDefault();
+          console.log("please provide all fields!")
+          setFormMsg("please provide all fields!")
+          setLoading(false)
+          return 
         }
 
         const form = new FormData()
@@ -51,22 +58,27 @@ function PostForm( {post} ) {
            ) 
           .then((res)=>{
             console.log(res.data);
+            if(res.data){
+              setLoading(false)
+              setFormMsg("video uploade sucessfully");
+              navigate(`/profile/${localStorage.getItem('userId')}`);
+            }
           }).catch((err)=>{
+            setLoading(false)
+            navigate(`/profile/${localStorage.getItem('userId')}`);
             console.log(err);
+            return;
           })
         } catch (error) {
+          setLoading(false)
+          navigate(`/profile/${localStorage.getItem('userId')}`);
           console.log(error);
+          return;
         }
     }
 
     function clearForm(){
-        setTitle('');
-        setDescription('');
-        setFile('');
-        setlocation('');
-        settags('');
-        setClear(true);
-        navigate('/createpost')
+        navigate(`/profile/${localStorage.getItem("userId")}`)
     }
     useEffect(()=>{
       console.log("upload page loaded")
@@ -76,13 +88,19 @@ function PostForm( {post} ) {
         <FormControl className='mb-10'>
         <FormLabel name='title'>Title</FormLabel>
         <Textarea className='shad-textarea custum-scrollbar'
-         onChange={(e) => setTitle(e.target.value)} />
+         onChange={(e) => {          
+          setLoading(false)
+          setFormMsg('')
+          setTitle(e.target.value)}} />
         </FormControl>
 
         <FormControl className='mb-10'>
         <FormLabel name='description'>Description</FormLabel>
         <Textarea className='shad-textarea custum-scrollbar'
-         onChange={(e) => setDescription(e.target.value)} />
+         onChange={(e) =>{
+          setLoading(false)
+          setFormMsg('')
+          setDescription(e.target.value)}} />
         </FormControl>
 
         <FormControl className='mb-10'>
@@ -90,28 +108,46 @@ function PostForm( {post} ) {
           className='shad-textarea custum-scrollbar p-2'
           placeholder='Tap to Choose file from local'
           variant={'filled'}
-          onChange={(e) => setFile( e.target.files[0])}
+          onChange={(e) => {
+            setLoading(false)
+            setFormMsg('')
+            setFile( e.target.files[0])}}
           />
         </FormControl>
 
         <FormControl className='mb-10'>
         <Select placeholder='Select Category'
           size='md'  bg='black' color='white' 
-          onChange={(e) => setCategory(e.target.value)}
+          onChange={(e) => {
+            setLoading(false)
+            setFormMsg('')
+            setCategory(e.target.value)}}
          >
-          <option className='text-black' bg='black' color='white' value='option1'>Option 1</option>
-          <option className='text-black' bg='black' color='white' value='option2'>Option 2</option>
-          <option className='text-black' bg='black' color='white' value='option3'>Option 3</option>
+          <option className='text-black' bg='black' color='white' value='development'>development</option>
+          <option className='text-black' bg='black' color='white' value='comedy'>comedy</option>
+          <option className='text-black' bg='black' color='white' value='gaming'>gaming</option>
+          <option className='text-black' bg='black' color='white' value='food'>food</option>
+          <option className='text-black' bg='black' color='white' value='beauty'>beauty</option>
+          <option className='text-black' bg='black' color='white' value='music'>music</option>
+
         </Select>
         </FormControl>
 
         <label className='mb-10' >Add location</label>
         <Input name='location' className='mb-5'
-         onChange={(e) =>setlocation(e.target.value)}/>
+         onChange={(e) =>{
+           setLoading(false)
+           setFormMsg('')
+           setlocation(e.target.value)}}
+          />
 
         <label className=''>Add tags (seprated by comma ",") </label>
         <Input name='tags' className='mb-5'
-         onChange={(e) =>settags(e.target.value)} />
+         onChange={(e) =>{
+          setLoading(false)
+          setFormMsg('')
+          settags(e.target.value)}}
+           />
 
         <div className='flex gap-4 items-center justify-end'>
             <Button type='button' className='shad-button_dark_4'
@@ -119,9 +155,12 @@ function PostForm( {post} ) {
             >
                 Cancle
             </Button>
-            <Button  onClick={createPost} className='shad-button_primary whitespace-nowrap'>
+            <Button 
+              isLoading={isLoading}
+             onClick={createPost} className='shad-button_primary whitespace-nowrap'>
                 Submit
             </Button>
+            <p className='text-red'>{formMsg}</p>
         </div>
          
     </form>

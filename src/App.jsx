@@ -10,12 +10,32 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import Search from "./components/Search";
 import EditProfile from "./pages/EditProfile";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import GuestIds from "./pages/GuestIds";
 
 function App() {
+  const [videos,setAllVideos] = useState() 
+  async function getAllVideos(){
+    await axios.get("/api/v1/video/getallvideos")
+    .then((res)=>{ 
+       setAllVideos([...res.data.allVideos])
+    })
+    .catch((err)=>{
+        console.log(err);
+    })
+  }
+  useEffect(() => {
+    getAllVideos();
+  }, [])
+  
   const location = useLocation();
   return (
     <main className='flex h-screen '>
       <Routes>
+        <Route path='/guestids' element={<GuestIds />} />
+
         {/* public Routes => can be seen by everyone */}
         <Route element={<AuthLayout />} >
           <Route path='/login' element={<LoginPage />} />
@@ -24,7 +44,7 @@ function App() {
 
         {/* private Routes => can be used/seen only if logged in  */}
         <Route element={<RootLayout />}>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Home videos={videos}/>} />
           <Route path='/search/:searchTerm' element={<Search/>} />
           <Route path='/profile/:id/*' element={<Profile />} />
           <Route path='/editprofile/:id' element={<EditProfile />} />

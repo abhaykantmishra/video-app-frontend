@@ -8,7 +8,7 @@ const EditProfile = () => {
     const navigate = useNavigate();
     const uid = useLocation().pathname.split('/')[2]
 
-    const verifyUrl = 'https://video-app-backend-s7qn.onrender.com/api/v1/user/verifyuser'
+    const verifyUrl = '/api/v1/user/verifyuser'
     const [isCurrentUser,setIsCurrentUSer] = useState(false);
 
     async function checkIfCurrentUser(){
@@ -19,6 +19,7 @@ const EditProfile = () => {
           }).then((res)=>{
             if(res.data.msg === "your access token verified"){
               setIsCurrentUSer(true);
+              return;
             }else{
               setIsCurrentUSer(false)
               navigate('/')
@@ -36,27 +37,41 @@ const EditProfile = () => {
         checkIfCurrentUser();
     },[])
 
+    const [isLoading,setLoading] = useState(false);
     const [name,setname] = useState("");
     const [email,setemail] = useState("");
     const [file,setFile] = useState();
     const [formMsg,setFormMsg] = useState("");
 
-    const editUserUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/updateprofile"
+    const editUserUrl = "/api/v1/user/updateprofile"
 
 
     async function editHandler(){
+        setLoading(true);
         console.log(name , " ",email , " ",file)
-        if(!name && !email && !file){
-            setFormMsg("Atleast provide one field")
-            console.log("Atleast provide one field")
+        if(!name || !email || !file){
+            setLoading(false);
+            setFormMsg("Please provide all field")
+            console.log("please provide one field")
+            e.preventDefault();
             return ;
         }
 
         await axios.post(editUserUrl,{
-            user:localStorage.getItem("user"), name:name , email:email , userImg:file
+            user:localStorage.getItem("user"), name:name.trim() , email:email.trim() , userImg:file
         })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err))
+        .then((res) =>{
+          setFormMsg("")
+           setLoading(false);
+           navigate(`/profile/${localStorage.getItem("userId")}`)
+           return;
+          })
+        .catch((err) => {
+          setLoading(false);
+          navigate(`/profile/${localStorage.getItem("userId")}`)
+          console.log(err)
+          return
+        })
 
     }
     
@@ -76,13 +91,19 @@ const EditProfile = () => {
     </div>
     <form className='w-full gap-5' onSubmit={editHandler}>
 
-    <label  className='font-medium'>Add Name</label>
+    <label htmlFor='name'  className='font-medium'>Add Name</label>
     <Input name='tags' className='mb-5'
-     onChange={(e) =>setname(e.target.value)} />
+     onChange={(e) =>{
+      setFormMsg('')
+      setname(e.target.value)
+      }} />
 
-     <label className='font-medium'>Add Email</label>
+     <label htmlFor='email' className='font-medium'>Add Email</label>
     <Input name='tags' className='mb-5'
-     onChange={(e) =>setemail(e.target.value)} />
+     onChange={(e) =>{
+      setFormMsg('')
+      setemail(e.target.value)}}
+    />
    
 
     <FormControl className='mb-10'>
@@ -91,7 +112,10 @@ const EditProfile = () => {
           className='shad-textarea custum-scrollbar p-2'
           placeholder='Tap to Choose file from local'
           variant={'filled'}
-          onChange={(e) => setFile( e.target.files[0])}
+          onChange={(e) => {
+             setFormMsg('')
+             setFile( e.target.files[0])}
+          }
     />
     </FormControl>
 
@@ -103,6 +127,7 @@ const EditProfile = () => {
         <Button type='submit' onClick={editHandler} className='shad-button_primary whitespace-nowrap'>
             Submit
         </Button>
+        <p className='text-red'>{formMsg}</p>
     </div>
      
 </form>

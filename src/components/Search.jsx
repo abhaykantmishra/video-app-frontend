@@ -10,8 +10,8 @@ import VideoCard from './VideoCard';
 
 const Search = () => {
     const searchTerm = useLocation().pathname.split('/')[2];
-  const allUserUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/allusers"
-  const allVideosUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/video/getallvideos";
+  const allUserUrl = "/api/v1/user/allusers"
+  const allVideosUrl = "/api/v1/video/getallvideos";
   const [isAccounts, setIsAccounts] = useState(true);
   const [allUsers , setAllusers] = useState([]);
   const [videos , setAllVideos] = useState([]);
@@ -54,7 +54,7 @@ const Search = () => {
   
   return (
     <div className='w-full  '>
-      <div className='flex gap-10 mb-10 border-b-2 border-gray-200 md:fixed z-50 bg-black w-full'>
+      <div className='flex gap-10 mb-10 border-b-2 border-gray-200  z-50 bg-black w-full'>
         <p onClick={() => setIsAccounts(true)} className={`text-xl  font-semibold cursor-pointer ${accounts} mt-2`}>
           Accounts
         </p>

@@ -54,9 +54,12 @@ const VideoCard = ({ _id,videoUrl,isShowingOnHome=false,likes=0,caption,ownerId,
   if(!isShowingOnHome) {
     return (
       <div >
-        <Link to={`/profile/${ownerId}`}>
-        <p className='font-bold text-sm '>@{ownerUsername}</p>
+        <div className='mb-1 flex flex-row'>
+        <Link to={`/profile/${ownerId}`} className='flex flex-row px-2'>
+        <img src={ownerImg} alt="img" className='rounded-full w-[30px] mr-2 ' />
+        <p className='font-bold text-medium text-sky-300 '>@{ownerUsername}</p>
         </Link>
+        </div>
         <div
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
@@ -92,11 +95,13 @@ const VideoCard = ({ _id,videoUrl,isShowingOnHome=false,likes=0,caption,ownerId,
             </div>
           )}
         </div>
+        <div>
         <Link to={`/detail/${_id}`}>
-          <p className='mt-5 text-md text-blue-500 cursor-pointer w-210'>
-            {caption || "caption"}
+          <p className=' text-md text-blue-500 cursor-pointer w-210 overflow-x-hidden'>
+            {caption || "title"}
           </p>
         </Link>
+        </div>
       </div>
     )
   }

@@ -7,14 +7,14 @@ import axios from 'axios';
 
 function LoginPage() {
     const navigate = useNavigate();
-    const loginUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/login"
+    const loginUrl = "/api/v1/user/login"
     const [email , setEmail] = useState("");
     const [password , setPassword] = useState("");
     const [isLoading , setLoading] = useState(false);
 
     const loginHandler = async (e) => {
         setLoading(true);
-        await axios.post(loginUrl , {
+        await axios.post("http://localhost:8000/api/v1/user/login ", {
             username:email,password:password
         }).then((res)=>{
             localStorage.setItem("accessToken" , res.data.accessToken)
@@ -28,6 +28,10 @@ function LoginPage() {
             setLoading(false);
             navigate('/login')
         })
+    }
+
+    const guestLoginHandler = () => {
+        navigate('/guestids')
     }
 
   return (
@@ -53,6 +57,14 @@ function LoginPage() {
          onClick={loginHandler}
         >
             Submit
+        </Button>
+        <Button 
+         onClick={guestLoginHandler}
+         isLoading = {isLoading}
+         className='w-full mt-3 bg-red' 
+         colorScheme='voilet'
+         >
+           Login with a Guest Id
         </Button>
         </div>
         </form>

@@ -8,7 +8,7 @@ import { loginUser } from '../utils/functions';
 
 
 function SignUpPage() {
-    const signupUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/register"
+    const signupUrl = "/api/v1/user/register"
     const navigate = useNavigate();
     const [name , setName] = useState("");
     const [username , setUsername] = useState("");
@@ -37,6 +37,19 @@ function SignUpPage() {
                 console.log(error);
             }
     }
+
+    const guestLoginHandler = async (e) => {
+        e.preventDefault();
+        await axios.get("/api/v1/user/getguestusers")
+        .then((res) => {
+            navigate('/guestids');
+        })
+        .catch((err) => {
+            e.preventDefault();
+            console.log(err);
+        })
+    }
+
   return (
     <>
         <div className=''>
@@ -59,7 +72,7 @@ function SignUpPage() {
         <label className='text-sm font-bold' >Password</label>
         <Input type='password' placeholder='password' size='md' onChange={(e) => {setPassword(e.target.value)}} />
         </div>
-        <div className='mb-3'>
+        <div className='mb-3 w-full'>
         <Button 
          onClick={signupHandler}
          isLoading = {isLoading}
@@ -68,6 +81,14 @@ function SignUpPage() {
          colorScheme='voilet'
          >
             Submit
+        </Button>
+        <Button 
+         onClick={guestLoginHandler}
+         isLoading = {isLoading}
+         className='w-full mt-3 bg-red' 
+         colorScheme='voilet'
+         >
+           Login with a Guest Id
         </Button>
         <p className='text-sm text-center text-red'>{formMsg}</p>
         </div>

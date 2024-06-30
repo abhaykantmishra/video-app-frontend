@@ -1,33 +1,62 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate,useLocation } from 'react-router-dom';
 import { GoVerified } from 'react-icons/go';
-import { Image ,AspectRatio} from '@chakra-ui/react';
+import { Image ,AspectRatio, useStepContext} from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { MdOutlineCancel } from 'react-icons/md';
 import { BsFillPlayFill } from 'react-icons/bs';
 import { HiVolumeUp, HiVolumeOff } from 'react-icons/hi';
 
-import Comments from '../components/Comments';
-// import { BASE_URL } from '../../utils';
-import LikeButton from '../components/LikeButton';
-// import useAuthStore from '../../store/authStore';
-
+import { Card,CardBody,CardFooter } from '@chakra-ui/react';
+import { FcLike,FcLikePlaceholder } from "react-icons/fc";
+import { MdInsertComment } from "react-icons/md";
 import axios from 'axios';
 
 
 
-const Detail = ({ videoId, videoUrl, postedBy , postedId,caption,likes,VideoComments}) => {
-  const [post, setPost] = useState({videoId, videoUrl, postedBy , postedId,caption,likes,VideoComments});
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isVideoMuted, setIsVideoMuted] = useState(false);
-  const [isPostingComment, setIsPostingComment] = useState(false);
-  const [comment, setComment] = useState({});
+const Detail = () => {
+  const navigate = useNavigate();
+  const videoId = useLocation().pathname.split('/')[2];
+
+  const [videoInfo,setVideoInfo] = useState([])
+  const [isPlaying,setIsPlaying] = useState(false);
+  const [isLiked,setLiked] = useState(false);
+  const [likeCnt,setlikecnt] = useState(0)
 
   const videoRef = useRef(null);
 
-  const { userProfile }= {
-    _id:'dummy UID'
+  const checkLike = async () => {
+    await axios.post('/api/v1/video/check-like',{
+      userId:localStorage.getItem("userId"),
+      videoId:videoId
+    }).then((res)=>{
+      if(res.data.liked === true)
+         setLiked(true)
+      else setLiked(false)
+    })
+    .catch((err) => {
+      console.log(err);
+      return;
+    })
   }
+  
+
+  const getVideoInfo = async () => {
+    await axios.post("/api/v1/video/getvideobyid",{videoId:videoId})
+    .then(async (res)=>{
+      setVideoInfo(res.data.video);
+      setlikecnt(res.data.video.likes);
+      checkLike();
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+
+  useEffect(()=>{
+    getVideoInfo();
+  },[videoId])
+
 
   const onVideoClick = () => {
     if (isPlaying) {
@@ -39,137 +68,112 @@ const Detail = ({ videoId, videoUrl, postedBy , postedId,caption,likes,VideoComm
     }
   };
 
-  useEffect(() => {
-    if (post && videoRef?.current) {
-      videoRef.current.muted = isVideoMuted;
-    }
-  }, [post, isVideoMuted]);
+  // useEffect(() => {
+  //   if (post && videoRef?.current) {
+  //     videoRef.current.muted = isVideoMuted;
+  //   }
+  // }, [post, isVideoMuted]);
 
-  const handleLike = async (like) => {
-    if (userProfile) {
-      const res = await axios.put(`${BASE_URL}/api/like`, {
-        userId: userProfile._id,
-        postId: post._id,
-        like
-      });
-      setPost({ ...post, likes: res.data.likes });
-    }
+
+  const likedByUser = ()=>{
+    axios.post("/api/v1/video/likedbyuser",{
+      userId:localStorage.getItem("userId"), videoId:videoId 
+    })
+    .then((res)=>{
+      return;
+    })
+    .catch((err)=>{
+      console.log(err)
+      return;
+    })
+  }
+
+  const unlikedByUser = ()=>{
+    axios.post("/api/v1/video/unlikedbyuser",{
+      userId:localStorage.getItem("userId"), videoId:videoId 
+    })
+    .then((res)=>{
+      return;
+    })
+    .catch((err)=>{
+      console.log(err)
+      return;
+    })
+  }
+
+  const handleLike = async () => {
+   if(isLiked === true){
+    setlikecnt(likeCnt-1)
+    setLiked(false)
+    unlikedByUser();
+   }else{
+    setlikecnt(likeCnt+1)
+    setLiked(true)
+    likedByUser();
+   }
   };
 
-  const addComment = async (e) => {
-    e.preventDefault();
+  // const addComment = async (e) => {
+  //   e.preventDefault();
 
-    if (userProfile) {
-      if (comment) {
-        setIsPostingComment(true);
-        const res = await axios.put(`${BASE_URL}/api/post/${videoId}`, {
-          userId: userProfile._id,
-          comment,
-        });
+  //   if (userProfile) {
+  //     if (comment) {
+  //       setIsPostingComment(true);
+  //       const res = await axios.put(`${BASE_URL}/api/post/${videoId}`, {
+  //         userId: userProfile._id,
+  //         comment,
+  //       });
 
-        setPost({ ...post, comments: res.data.comments });
-        setComment('');
-        setIsPostingComment(false);
-      }
-    }
-  };
+  //       setPost({ ...post, comments: res.data.comments });
+  //       setComment('');
+  //       setIsPostingComment(false);
+  //     }
+  //   }
+  // };
 
-  return (
-    <>
-      {post && (
-        <div className='flex w-full absolute left-0 top-0 bg-black text-red flex-wrap lg:flex-nowrap'>
-          <div className='relative flex-2 w-[1000px] lg:w-9/12 flex justify-center items-center bg-blurred-img bg-no-repeat bg-cover bg-center'>
-            <div className='opacity-90 absolute top-6 left-2 lg:left-6 flex gap-6 z-50'>
-              <p className='cursor-pointer ' onClick={() => window.history.back()}>
-                <MdOutlineCancel className='text-white text-[35px] hover:opacity-90' />
-              </p>
-            </div>
-            <div className='relative'>
-              <div className='lg:h-[100vh] h-[60vh]'>
-                <AspectRatio ratio={9/16}  className='w-[250px]'>
-                <video
-                  ref={videoRef}
-                  onClick={onVideoClick}
-                  loop
-                  src={videoUrl}
-                  className=' h-full cursor-pointer'
-                ></video>
-                </AspectRatio>
-              </div>
+return(
+  <div>
+    <div>
+    <Card className='mt-1'
+      direction={{ base: 'column', sm: 'row' }}
+      overflow='hidden'
+      variant='outline'
+    >
+      <CardBody>
+        <AspectRatio ratio={9/16} className='w-[350px]'>
+          <video
+            loop
+            src={videoInfo.videoFile}
+            ref={videoRef}
+            onClick={onVideoClick}
+            className='w-[250px]  rounded-xl cursor-pointer bg-off-white'
+          ></video>
+        </AspectRatio>
+      </CardBody>
+      <CardFooter className="flex flex-col-reverse mb-5 pb-5 ">  
 
-              <div className='absolute top-[45%] left-[40%]  cursor-pointer'>
-                {!isPlaying && (
-                  <button onClick={onVideoClick}>
-                    <BsFillPlayFill className='text-white text-6xl lg:text-8xl' />
-                  </button>
-                )}
-              </div>
-            </div>
-            <div className='absolute bottom-5 lg:bottom-10 right-5 lg:right-10  cursor-pointer'>
-              {isVideoMuted ? (
-                <button onClick={() => setIsVideoMuted(false)}>
-                  <HiVolumeOff className='text-white text-3xl lg:text-4xl' />
-                </button>
-              ) : (
-                <button onClick={() => setIsVideoMuted(true)}>
-                  <HiVolumeUp className='text-white text-3xl lg:text-4xl' />
-                </button>
-              )}
-            </div>
-          </div>
-          <div className='relative w-[1000px] md:w-[900px] lg:w-[700px]'>
-            <div className='lg:mt-20 mt-10'>
-              <Link to={`/profile/${postedId}`}>
-                <div className='flex gap-4 mb-4 bg-white w-full pl-10 cursor-pointer'>
-                  <Image
-                    width={60}
-                    height={60}
-                    alt='user-profile'
-                    className='rounded-full'
-                    src={post.postedBy?.image}
-                  />
-                  <div>
-                    <div className='text-xl font-bold lowercase tracking-wider flex gap-2 items-center justify-center'>
-                      {String(postedBy).replace(/\s+/g, '')}{' '}
-                      <GoVerified className='text-blue-400 text-xl' />
-                    </div>
-                    <p className='text-md'> {postedBy}</p>
-                  </div>
-                </div>
-              </Link>
-              <div className='px-10'>
-                <p className=' text-md text-gray-600'>{caption}</p>
-              </div>
-              <div className='mt-10 px-10'>
-                {userProfile && <LikeButton
-                  likes={likes}
-                  flex='flex'
-                  handleLike={() => handleLike(true)}
-                  handleDislike={() => handleLike(false)}
-                />}
-              </div>
-              <Comments
-                comment={comment}
-                setComment={setComment}
-                addComment={addComment}
-                comments={VideoComments}
-                isPostingComment={isPostingComment}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
-
-export const getServerSideProps = async ({
-  params: { id },}) => {
-  const res = await axios.get(`${BASE_URL}/api/post/${id}`);
-
-  return {
-    props: { postDetails: res.data },
-  };
-};
+         {/* <p className='text-center mb-5'>{103}</p> */}
+        <MdInsertComment className='text-4xl ' />
+        {
+          isLiked ? (
+            <>
+            <p className='text-center mb-5'>{likeCnt|| 0}</p>
+            <FcLike onClick={handleLike} className='text-4xl' />
+            </>
+          ):(
+            <>
+            <p className='text-center mb-5'>{likeCnt}</p>
+            <FcLikePlaceholder onClick={handleLike} className='text-4xl ' />
+            </>
+          )
+        }
+        
+        
+        
+      </CardFooter>
+      </Card>
+    </div>
+  </div>
+)}
 
 export default Detail;

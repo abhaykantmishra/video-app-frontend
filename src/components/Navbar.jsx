@@ -12,7 +12,7 @@ import { GoogleLogin, googleLogout  } from '@react-oauth/google';
 // import useAuthStore from '../store/authStore';
 // import { IUser } from '../types';
 // import { createOrGetUser } from '../utils';
-import Logo from '/assets/images/logo.svg';
+import Logo from '/assets/images/logo.png';
 import axios from 'axios';
 
 const Navbar = () => {
@@ -25,24 +25,15 @@ const Navbar = () => {
     const addUser = ()=>{console.log("adduser function called")}
 
     const removeUser = async ()=>{
-          const logoutUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/logout";
+          const logoutUrl = "/api/v1/user/logout";
           const token = localStorage.getItem("accessToken");
           if(!token){
             console.log(" No user Logged In")
             navigate('/login')
             return ;
           }
-        await axios.post(logoutUrl,{
-          token:token
-        }).then( (res)=>{
-          console.log(res.data)
-          localStorage.clear();
-          navigate('/login');
-        }).catch((err) => {
-          console.log(err);
-          navigate('/login');
-          return;
-        })
+         localStorage.clear();
+         navigate('/login')
     }
     
   
@@ -60,9 +51,9 @@ const Navbar = () => {
   return (
     <div className='w-full flex justify-between items-center border-b-2 border-gray-200 py-2 px-4'>
       <Link to='/'>
-        <div className='w-[100px] md:w-[129px] md:h-[30px] h-[38px]'>
+        <div className='w-[50px]'>
           <Image
-            className='cursor-pointer'
+            className='cursor-pointer rounded-full'
             src={Logo}
             alt='logo'
             layout='responsive'

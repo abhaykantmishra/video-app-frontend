@@ -8,7 +8,7 @@ function AuthLayout() {
     const [isAuthenticate , setAuth] = useState(false)
     const navigate = useNavigate();
     const pathname = window.location.pathname;
-    const verifyUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/verifyuser"
+    const verifyUrl = "/api/v1/user/verifyuser"
     useEffect( ()=>{
       const token = localStorage.getItem("accessToken");
       const userId = localStorage.getItem("userId");
@@ -35,7 +35,7 @@ function AuthLayout() {
                 <Outlet />
             </div>
             <img 
-                src="/assets/images/side-img.svg" alt="logo"
+                src="/assets/images/side-img.jpg" alt="logo"
                 className='hidden xl:block h-screen w-1/2 object-cover bg-no-repeat' 
             />
            </> 
