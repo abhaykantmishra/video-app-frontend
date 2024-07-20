@@ -24,7 +24,7 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
     const [isVideoMuted,setIsVideoMuted] = useState(false);
 
     const checkLike = async () => {
-        await axios.post('/api/v1/video/check-like',{
+        await axios.post('https://video-app-backend-s7qn.onrender.com/api/v1/video/check-like',{
           userId:localStorage.getItem("userId"),
           videoId:videoId
         }).then((res)=>{
@@ -39,7 +39,7 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
     }
 
     const likedByUser = ()=>{
-        axios.post("/api/v1/video/likedbyuser",{
+        axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/video/likedbyuser",{
           userId:localStorage.getItem("userId"), videoId:videoId 
         })
         .then((res)=>{
@@ -52,7 +52,7 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
     }
     
     const unlikedByUser = ()=>{
-      axios.post("/api/v1/video/unlikedbyuser",{
+      axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/video/unlikedbyuser",{
         userId:localStorage.getItem("userId"), videoId:videoId 
       })
       .then((res)=>{
@@ -77,7 +77,7 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
     };
 
     const checkSaved = async () => {
-        await axios.post('/api/v1/user/check-saved',{
+        await axios.post('https://video-app-backend-s7qn.onrender.com/api/v1/user/check-saved',{
           userId:localStorage.getItem("userId"),
           videoId:videoId
         }).then((res)=>{
@@ -92,7 +92,7 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
     }
 
     const savedByUser = () => {
-        axios.post("/api/v1/user/savedbyuser",{
+        axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/user/savedbyuser",{
           userId:localStorage.getItem("userId"), videoId:videoId 
         })
         .then((res)=>{
@@ -105,7 +105,7 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
       }
 
     const unSavedByUser = () => {
-        axios.post("/api/v1/user/unsavedbyuser",{
+        axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/user/unsavedbyuser",{
           userId:localStorage.getItem("userId"), videoId:videoId 
         })
         .then((res)=>{
