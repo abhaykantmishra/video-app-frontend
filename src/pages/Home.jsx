@@ -20,7 +20,7 @@ function Home( {videos} ) {
     videoFile:"http://res.cloudinary.com/dcqgytpzz/video/upload/v1719571878/r5xp3heucxqcic8q6mll.mp4"
   }
 
-  const allDbVideosUrl = "/api/v1/video/getallvideos"
+  const allDbVideosUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/video/getallvideos"
   const testApi = "http://localhost:3333/api"
 
   const [videosList, setVideosList] = useState([]);

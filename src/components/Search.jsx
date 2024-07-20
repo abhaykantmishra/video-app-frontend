@@ -9,10 +9,10 @@ import VideoCard from './VideoCard';
 
 
 const Search = () => {
-  const searchTerm = useLocation().pathname.split('/')[2];
 
-  const allUserUrl = "/api/v1/user/allusers"
-  const allVideosUrl = "/api/v1/video/getvideosbyquery";
+  const searchTerm = useLocation().pathname.split('/')[2];
+  const allUserUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/allusers"
+  const allVideosUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/video/getallvideos";
 
   const [isAccounts, setIsAccounts] = useState(true);
   const [allUsers , setAllusers] = useState([]);
