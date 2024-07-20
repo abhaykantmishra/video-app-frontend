@@ -18,7 +18,7 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
 
     const [isLiked,setLiked] = useState(false);
     const [likeCnt,setlikecnt] = useState(0);
-    const [isSaved,setSaved] = useState(true);
+    const [isSaved,setSaved] = useState(false);
     const videoRef = useRef(null);
     const [isPlaying,setPlaying] = useState(false);
     const [isVideoMuted,setIsVideoMuted] = useState(false);
