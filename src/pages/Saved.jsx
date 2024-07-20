@@ -10,7 +10,7 @@ const [videos , setVideos] = useState([]);
 
 
 const getVideo = async (vidIds) => {
-  await  axios.post("/api/v1/video/getvideosbyidarray",{Ids:vidIds})
+  await  axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/video/getvideosbyidarray",{Ids:vidIds})
     .then((res) => {
       setVideos(res.data.videos);
     })
@@ -20,7 +20,7 @@ const getVideo = async (vidIds) => {
 }
   
 const getSavedVideos = async () => {
-  await axios.post('/api/v1/user/getsavedvideos',{
+  await axios.post('https://video-app-backend-s7qn.onrender.com/api/v1/user/getsavedvideos',{
     userId:localStorage.getItem('userId'),
     token:localStorage.getItem('accessToken')
   })
@@ -36,7 +36,7 @@ useEffect(()=>{
   getSavedVideos();
 },[])
 
-const dummyUrl = 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
+// const dummyUrl = 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
 
   return (
     <>
