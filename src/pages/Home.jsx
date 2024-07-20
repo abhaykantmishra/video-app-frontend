@@ -1,6 +1,7 @@
 import React, { useEffect,useState , useRef } from 'react'
 import { Card, CardHeader, CardBody, CardFooter,Stack,Heading,Divider,ButtonGroup,Button } from '@chakra-ui/react'
 import VideoCard from '../components/VideoCard';
+import SmallVideoCard from '../components/SmallVideoCard';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import NoResults from '../components/NoResults';
@@ -67,7 +68,7 @@ function Home( {videos} ) {
           !isShowingTopic ? (
             <>
             {videos?.map( (video) => (
-              <VideoCard key={video._id} _id={video?._id} videoUrl={video?.videoFile} caption={video?.title} 
+              <SmallVideoCard key={video._id} videoId={video?._id} videoUrl={video?.videoFile} caption={video?.title} 
                 ownerId={video?.owner} ownerImg={video?.ownerImg} ownerUsername={video?.ownerUsername} 
               />
             ))}
@@ -75,7 +76,7 @@ function Home( {videos} ) {
           ):(
             <>
             {topicVideo?.map( (video) => (
-              <VideoCard key={video._id} _id={video?._id} videoUrl={video?.videoFile} caption={video?.title} 
+              <SmallVideoCard key={video._id} videoId={video?._id} videoUrl={video?.videoFile} caption={video?.title} 
                 ownerId={video?.owner} ownerImg={video?.ownerImg} ownerUsername={video?.ownerUsername} 
               />
             ))}

@@ -9,6 +9,7 @@ import NoResults from '../components/NoResults';
 import { useNavigate } from 'react-router-dom';
 // import { IUser, Video } from '../../types';
 // import { BASE_URL } from '../../utils';
+import SmallVideoCard from '../components/SmallVideoCard';
 
 
 
@@ -62,6 +63,7 @@ const Profile = ( ) => {
       return null;
     }
   },[userId])
+  
   useEffect( ()=>{
     try {
       axios.post(getVideosUrl , {username:user.username})
@@ -84,12 +86,9 @@ const Profile = ( ) => {
     
     <div className='w-full bg-black text-white color-white'>
       <div className='flex gap-6 md:gap-10 mb-4 bg-black w-full'>
-        <div className='w-16 h-16 md:w-32 md:h-32'>
+        <div className='h-16 w-16 rounded-full '>
           <Image
-            width={120}
-            height={120}
-            layout='responsive'
-            className='rounded-full'
+          className='h-18 w-18 rounded-full'
             src={user?.profileImg}
             alt='user-profile'
           />
@@ -110,7 +109,7 @@ const Profile = ( ) => {
               variant='ghost'
               >
                <MdEdit />
-               Edit Profile
+               Edit
               </Button>
             </div>
           ):(
@@ -132,7 +131,7 @@ const Profile = ( ) => {
         <div className='flex gap-6 flex-wrap md:justify-start'>
           {videosList?.length > 0 ? (
             videosList.map((video) => (
-              <VideoCard key={video._id} isShowingOnHome={false} _id={video._id} 
+              <SmallVideoCard key={video._id} isShowingOnHome={false} videoId={video._id} 
                 caption={video.title} likes={video.likes} ownerId={video.owner}
                  ownerUsername={video.ownerUsername} ownerImg={user.profileImg}
                  videoUrl={`${video.videoFile}`}

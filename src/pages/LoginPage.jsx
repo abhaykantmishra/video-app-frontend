@@ -14,7 +14,7 @@ function LoginPage() {
 
     const loginHandler = async (e) => {
         setLoading(true);
-        await axios.post("http://localhost:8000/api/v1/user/login ", {
+        await axios.post("/api/v1/user/login ", {
             username:email,password:password
         }).then((res)=>{
             localStorage.setItem("accessToken" , res.data.accessToken)
