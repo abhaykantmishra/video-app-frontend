@@ -31,7 +31,7 @@ function RootLayout() {
     <div className='w-full flex flex-wrap'>
       <Navbar/>
       <Sidebar/>
-      <section className='flex flex-1 h-full ml-10'>
+      <section className='flex flex-1 h-full ml-2'>
         <Outlet/>
       </section>
     </div>

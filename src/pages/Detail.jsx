@@ -10,6 +10,8 @@ import { HiVolumeUp, HiVolumeOff } from 'react-icons/hi';
 import { Card,CardBody,CardFooter } from '@chakra-ui/react';
 import { FcLike,FcLikePlaceholder } from "react-icons/fc";
 import { MdInsertComment } from "react-icons/md";
+import { IoBookmark } from "react-icons/io5"
+import { CiBookmark } from "react-icons/ci";
 import axios from 'axios';
 
 
@@ -21,6 +23,7 @@ const Detail = () => {
   const [videoInfo,setVideoInfo] = useState([])
   const [isPlaying,setIsPlaying] = useState(false);
   const [isLiked,setLiked] = useState(false);
+  const [isSaved,setSaved] = useState();
   const [likeCnt,setlikecnt] = useState(0)
 
   const videoRef = useRef(null);
@@ -55,6 +58,7 @@ const Detail = () => {
 
   useEffect(()=>{
     getVideoInfo();
+    checkSaved();
   },[videoId])
 
 
@@ -113,6 +117,57 @@ const Detail = () => {
    }
   };
 
+  const checkSaved = async () => {
+    await axios.post('/api/v1/user/check-saved',{
+      userId:localStorage.getItem("userId"),
+      videoId:videoId
+    }).then((res)=>{
+      if(res.data.saved === true)
+         setSaved(true)
+      else setSaved(false)
+    })
+    .catch((err) => {
+      console.log(err);
+      return;
+    })
+  }
+
+  const savedByUser = () => {
+    axios.post("/api/v1/user/savedbyuser",{
+      userId:localStorage.getItem("userId"), videoId:videoId 
+    })
+    .then((res)=>{
+      return;
+    })
+    .catch((err)=>{
+      console.log(err)
+      return;
+    })
+  }
+
+  const unSavedByUser = () => {
+    axios.post("/api/v1/user/unsavedbyuser",{
+      userId:localStorage.getItem("userId"), videoId:videoId 
+    })
+    .then((res)=>{
+      return;
+    })
+    .catch((err)=>{
+      console.log(err)
+      return;
+    })
+  }
+
+  const handleSaved = async () => {
+    if(isSaved == true){
+      setSaved(false);
+      unSavedByUser();
+    }else{
+      setSaved(true);
+      savedByUser();
+    }
+  }
+
   // const addComment = async (e) => {
   //   e.preventDefault();
 
@@ -139,7 +194,7 @@ return(
       overflow='hidden'
       variant='outline'
     >
-      <CardBody>
+      <CardBody className='bg-transparent'>
         <AspectRatio ratio={9/16} className='w-[350px]'>
           <video
             loop
@@ -155,9 +210,17 @@ return(
          {/* <p className='text-center mb-5'>{103}</p> */}
         <MdInsertComment className='text-4xl ' />
         {
+          isSaved ? (
+            <IoBookmark onClick={handleSaved} className='text-3xl text-center ml-1 text-rose-500 mb-5' />
+          ):(
+            <CiBookmark onClick={handleSaved} className='text-3xl text-center ml-1 mb-5'/>
+          )
+        }
+        
+        {
           isLiked ? (
             <>
-            <p className='text-center mb-5'>{likeCnt|| 0}</p>
+            <p className='text-center mb-5'>{likeCnt}</p>
             <FcLike onClick={handleLike} className='text-4xl' />
             </>
           ):(

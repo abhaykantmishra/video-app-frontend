@@ -14,6 +14,7 @@ function LoginPage() {
 
     const loginHandler = async (e) => {
         setLoading(true);
+      
         await axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/user/login ", {
             username:email,password:password
         }).then((res)=>{
