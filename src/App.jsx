@@ -17,6 +17,9 @@ import GuestIds from "./pages/GuestIds";
 
 function App() {
   const [videos,setAllVideos] = useState() 
+  // const [user,setUser] = useState([]);
+  // const [userVideo, setUserVideo] = useState();
+  
   async function getAllVideos(){
     await axios.get("https://video-app-backend-s7qn.onrender.com/api/v1/video/getallvideos")
     .then((res)=>{ 
@@ -26,8 +29,30 @@ function App() {
         console.log(err);
     })
   }
+
+  // async function  getUser(){
+  //   try {
+  //     axios.post(getUserUrl , {userId:userId})
+  //     .then((res)=>{
+  //       setUser(res.data.user)
+  //     })
+  //     .catch((err)=>{
+  //       console.log(err);
+  //       return null;
+  //     })
+  //   } catch (error) {
+  //     console.log(error);
+  //     return null;
+  //   }
+  // }
+
+  // async function  getUserVideo(){
+
+  // }
+
   useEffect(() => {
     getAllVideos();
+    // getUser()
   }, [])
   
   const location = useLocation();

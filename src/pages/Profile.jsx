@@ -49,18 +49,22 @@ const Profile = ( ) => {
  
   useEffect( () => {
     checkIfCurrentUser();
-    try {
-      axios.post(getUserUrl , {userId:userId})
-      .then((res)=>{
-        setUser(res.data.user)
-      })
-      .catch((err)=>{
-        console.log(err);
+    if(!isCurrentUser){
+      try {
+        axios.post(getUserUrl , {userId:userId})
+        .then((res)=>{
+          setUser(res.data.user)
+        })
+        .catch((err)=>{
+          console.log(err);
+          return null;
+        })
+      } catch (error) {
+        console.log(error);
         return null;
-      })
-    } catch (error) {
-      console.log(error);
-      return null;
+      }
+    }else{
+      setUser(localStorage.getItem("user"));
     }
   },[userId])
   
