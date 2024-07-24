@@ -18,7 +18,7 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
 
     const [isLiked,setLiked] = useState(false);
     const [likeCnt,setlikecnt] = useState(0);
-    const [isSaved,setSaved] = useState(true);
+    const [isSaved,setSaved] = useState(false);
     const videoRef = useRef(null);
     const [isPlaying,setPlaying] = useState(false);
     const [isVideoMuted,setIsVideoMuted] = useState(false);
@@ -158,7 +158,7 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
         <Link to={`/profile/${ownerId}`} >
         <div className="flex flex-row pt-1">
             <Image className='rounded-full h-[30px] w-[30px] md:w-[40px] md:h-[40px] '
-              src={ownerImg || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'}
+              src={ownerImg }
               alt='img'
             />
             <p className='ml-2 font-medium md:text-lg text-md text-sky-300'>@{ownerUsername || "username"}</p>
