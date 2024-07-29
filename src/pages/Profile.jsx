@@ -24,6 +24,7 @@ const Profile = ( ) => {
   const [videosList, setVideosList] = useState([]);
   const [user , setUser] = useState({});
   const [isCurrentUser,setIsCurrentUSer] = useState(false)
+  const [pageLoding,setPageLoading] = useState(false);
 
   async function checkIfCurrentUser(){
     if(userId === localStorage.getItem("userId")){
@@ -48,12 +49,15 @@ const Profile = ( ) => {
   }
  
   useEffect( () => {
+    setPageLoading(true);
     checkIfCurrentUser();
     if(!isCurrentUser){
+      setPageLoading(true);
       try {
         axios.post(getUserUrl , {userId:userId})
         .then((res)=>{
           setUser(res.data.user)
+          setPageLoading(false)
         })
         .catch((err)=>{
           console.log(err);
@@ -65,6 +69,7 @@ const Profile = ( ) => {
       }
     }else{
       setUser(localStorage.getItem("user"));
+      setPageLoading(false)
     }
   },[userId])
   
@@ -84,6 +89,25 @@ const Profile = ( ) => {
 
   const videos = showUserVideos ? 'border-b-2 border-black text-blue-500' : 'text-gray-400';
   const liked = !showUserVideos ? 'border-b-2 border-black text-blue-500' : 'text-gray-400';
+
+  if(pageLoding === true){
+    return (
+      <>
+      <div className='flex flex-col ml-[40%]'>
+         <Button
+            size="lg"
+            isLoading={pageLoding}
+            loadingText='Loading'
+            colorScheme='white'
+            variant='filled outline'
+            spinnerPlacement='start'
+            className='justify-center items-center text-2xl'
+        >
+        </Button>
+      </div>
+      </>
+    )
+  }
 
 
   return (

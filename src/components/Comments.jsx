@@ -1,86 +1,254 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import { Image,Input } from '@chakra-ui/react';
-import {Link} from "react-router-dom"
-import { GoVerified } from 'react-icons/go';
+import axios from "axios"
+import { useEffect, useState } from "react"
+import { Link } from "react-router-dom";
 
-// import useAuthStore from '../store/authStore';
-import NoResults from '../components/NoResults';
-// import { IUser } from '../types';
+import { Image,Input } from "@chakra-ui/react";
+import NoResults from "./NoResults";
+import { LuSendHorizonal } from "react-icons/lu";
 
+const Comments = ({videoId}) => {
 
+  let comments = [{}];
+  const [videoComments,setVideoComments] = useState([]);
+  const [isCommentsChanged,setCommentsChanged] = useState(0);
+  const [commentInput,setCommentInput] = useState("");
+  const [replyText,setReplyText] = useState("");
+  const [isEditingReply,setIsEditingReply] = useState(false);
+  const [ReplyCommentId,setReplyCommentId] = useState('');
+  const [isShowingReplies,setIsShowingReplies] = useState(false);
 
+  const user = JSON.parse(window.localStorage.getItem("user"))
 
-
-const Comments = ({ comment, setComment, addComment, comments, isPostingComment }) => {
-  const useAuthStore = () => {
-    allUsers = ['a','b','c','d','e'];
-    userProfile = {}
+  const getAllVideoComments = async () => {
+    await axios.post('/api/v1/comment/getvideocomment',{videoId:videoId})
+    .then((res) => {
+      setVideoComments(res.data.comments)
+      // comments =  res.data.comments;
+      // console.log(comments);
+      // for(let i=0 ; i<comments.length ; i++){
+      //   comments[i] = {...comments[i],isShowingReply:false}
+      // }
+      // setVideoComments(comments);
+      // console.log(videoComments);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
   }
-  // const { allUsers, userProfile } 
-  const allUsers = ['u1','u2','u5','u4','u3']
-  const userProfile = {
-    userName:"akm",
-    _id:'userId123'
+
+  const addComment =async (cmtId = "") => {
+    await axios.post('/api/v1/comment/createcomment',{
+      postedBy:user._id,
+      postedByUsername:user.username,
+      userImg:user.profileImg,
+      postedOn:videoId,
+      comment:commentInput,
+    })
+    .then((res) => {
+      console.log(res.data);
+      setCommentsChanged(isCommentsChanged+1);
+      setCommentInput("");
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  const delelteComment = async (commentId) => {
+    setCommentsChanged(isCommentsChanged-1);
+    await axios.post('/api/v1/comment/deletecomment',{
+      commentId:commentId
+    })
+    .then((res) => {
+        console.log(res.data);
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+  }
+
+  const addReply = async (e) => {
+    const commentId = ReplyCommentId;
+
+    videoComments.forEach((cmt) => {
+      if(cmt._id === commentId){
+        setIsEditingReply(true);
+      }else{
+        setIsEditingReply(false);
+      }
+    })
+    if(isEditingReply && replyText.trim().length > 0){
+      await axios.post('/api/v1/comment/addReply',{
+        commentId:commentId,
+        postedBy:user._id,
+        postedByUsername:user.username,
+        userImg:user.profileImg,
+        reply:replyText
+      })
+      .then((res) => {
+        console.log(res.data);
+        setReplyText('');
+        setReplyCommentId('');
+        setCommentsChanged(isCommentsChanged+1);
+        setIsEditingReply(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+    
+  }
+
+  const viewReplies = (comment) => {
+    console.log(comment);
+    if(isShowingReplies === false){
+      setIsShowingReplies(true)
+    }else{
+      setIsShowingReplies(false)
+    }
+  }
+
+  useEffect(() => {
+    getAllVideoComments();
+  },[isCommentsChanged])
+
+  if(videoComments.length === 0){
+    return (
+      <>
+      <div className="w-full h-full border-[1px] border-white flex flex-col relative">
+       <NoResults className="w-full" text={`No comment for this video yet`} />
+       <div className="w-full flex flex-row text-white absolute bottom-0">
+        <Input type="text"  value={commentInput} 
+          onChange={(e) => {setCommentInput(e.target.value)}}
+          placeholder="Add a new comment"
+          className="text-white inputBox m-1"
+        />
+        <LuSendHorizonal onClick={addComment} className="text-3xl mt-2 mx-1" />
+       </div>
+      </div>
+      </>
+    )
   }
 
   return (
-    <div className='border-t-2 border-gray-200 pt-4 px-10 mt-4 bg-[#F8F8F8] border-b-2 lg:pb-0 pb-[100px]'>
-      <div className='overflow-scroll lg:h-[457px]'>
-        {comments?.length > 0 ? (
-          comments?.map((item, idx) => (
-            <>
-              {allUsers?.map(
-                (user) =>
-                  user._id === (item.postedBy?._ref || item.postedBy?._id) && (
-                    <div className=' p-2 items-center' key={idx}>
-                      <Link to={`/profile/${user._id}`}>
-                        <div className='flex items-start gap-3'>
-                          <div className='w-12 h-12'>
-                            <Image
-                              width={48}
-                              height={48}
-                              className='rounded-full cursor-pointer'
-                              src={user.image}
-                              alt='user-profile'
-                              layout='responsive'
-                            />
-                          </div>
+  <>
+  <div className="w-full h-full border-[1px] border-white flex flex-col relative">
+  <div className="w-full h-[90%] overflow-y-scroll">
+    {
+      videoComments.map((comment) => {
+        return(
+        <div key={comment._id} className="mb-1 ml-2 mt-2">
+          <Link to={`/profile/${comment.postedBy}`} >
+            <div className="flex flex-row pt-1 mb-1">
+                <Image className='rounded-full h-[30px] w-[30px]'
+                  src={comment.userImg }
+                  alt='img'
+                />
+                <p className='ml-1 text-sm text-blue-700 font-medium'>@{comment.postedByUsername || "username"}</p>
+            </div>
+          </Link>
+          <p className="text-white">{comment.comment}</p>
 
-                          <p className='flex cursor-pointer gap-1 items-center text-[18px] font-bold leading-6 text-primary'>
-                            {user.userName}{' '}
-                            <GoVerified className='text-blue-400' />
-                          </p>
+          <div className="flex flex-row justify-between">
+            <Link to={'#'} onClick={(e) => {
+              setReplyCommentId(comment._id)
+              setIsEditingReply(true);
+              }}>
+            <p id={comment._id}  className="text-blue-500 text-xs">Add Reply</p>
+            </Link>
+
+            {
+              comment.replies.length > 0 ? (
+                !isShowingReplies ? (
+                  <Link to={'#'} onClick={
+                    (e) => {viewReplies(comment)}} 
+                  >
+                  <p id={comment._id}  className="text-blue-500 text-xs">{`View ${comment.replies.length} more replies`}</p>
+                  </Link>
+                ) : (
+                  <Link to={'#'} onClick={
+                    (e) => {viewReplies(comment)}} 
+                  >
+                  <p id={comment._id}  className="text-blue-500 text-xs">{`Hide replies`}</p>
+                  </Link>
+                )
+              ):(
+                <>
+                </>
+              )
+            }
+          </div>
+          <hr />
+          <div >
+            {
+              isShowingReplies ? (
+                <>
+                 {
+                  comment.replies.map((reply) => (
+                    <div key={reply._id} className="ml-4 mb-1">
+                      <Link to={`/profile/${comment.postedBy}`} >
+                        <div className="flex flex-row pt-1 mb-1">
+                            <Image className='rounded-full h-[25px] w-[25px]'
+                              src={reply.userImg }
+                              alt='img'
+                            />
+                            <p className='ml-1 text-sm text-blue-700 font-medium'>@{reply.repliedByUsername || "username"}</p>
                         </div>
                       </Link>
-                      <div>
-                        <p className='-mt-5 ml-16 text-[16px] mr-8'>
-                          {item.comment}
-                        </p>
+                      <div className="flex flex-row">
+                        <p className="text-blue-600 text-sm">{`@${reply.repliedByUsername}-> `}</p>
+                        <p className="text-white text-sm">{( reply.reply)}</p>
                       </div>
+                      <hr />
                     </div>
-                  )
-              )}
-            </>
-          ))
-        ) : (
-          <NoResults text='No Comments Yet! Be First to do add the comment.' />
-        )}
-      </div>
-     {userProfile && <div className='absolute bottom-0 left-0  pb-6 px-2 md:px-10 '>
-        <form onSubmit={addComment} className='flex gap-4'>
-          <Input
-            value={comment}
-            onChange={(e) => setComment(e.target.value.trim())}
-            className='bg-primary px-6 py-4 text-md font-medium border-2 w-[250px] md:w-[700px] lg:w-[350px] border-gray-100 focus:outline-none focus:border-2 focus:border-gray-300 flex-1 rounded-lg'
-            placeholder='Add comment..'
-          />
-          <button className='text-md text-gray-400 ' onClick={addComment}>
-            {isPostingComment ? 'Commenting...' : 'Comment'}
-          </button>
-        </form>
-      </div>}
+                  ))
+                 }
+                </>
+              ):(
+                <>
+                </>
+              )
+            }
+          </div>
+        </div>
+        )
+      })
+    }
+  </div>
+  { !isEditingReply ? (
+    <div className="w-full flex flex-row text-white absolute bottom-0">
+      <Input type="text"  value={commentInput} 
+        onChange={(e) => {setCommentInput(e.target.value)}}
+        placeholder="Add a new comment"
+        className="text-white inputBox"
+      />
+      <LuSendHorizonal onClick={addComment} className="text-3xl mt-2 mx-1" />
     </div>
-  );
-};
+  ) : (
+    <div className="w-full flex flex-row text-white absolute bottom-0">
+      <Input type="text"  value={replyText} 
+        onChange={(e) => {
+          setReplyText(e.target.value)
+        }}
+        placeholder={`Replying to a comment ...`}
+        className="text-white inputBox"
+      />
+      <button onClick={(e) => {
+        setIsEditingReply(false)
+        setReplyText("");
+        setReplyCommentId("");
+        setIsEditingReply(false);
+        }}
+        className="border-white border-[1px] rounded-md m-1 text-xs " 
+      >Cancle Replying</button>
+      <LuSendHorizonal onClick={addReply} className="text-3xl mt-2 mx-1" />
+    </div>
+  )
+    
+  }
+  </div>
+  </>
+  )
+}
 
-export default Comments;
+export default Comments

@@ -9,12 +9,10 @@ import { FcLikePlaceholder } from "react-icons/fc";
 import {IoBookmark , IoBookmarkOutline} from "react-icons/io5";
 import { BsFillPlayFill, BsFillPauseFill } from 'react-icons/bs';
 import { HiVolumeUp, HiVolumeOff } from 'react-icons/hi';
-import { PiCloudSlash } from 'react-icons/pi';
+import { MdOutlineMessage } from "react-icons/md";
 
+const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes,caption,ownerId,ownerUsername,ownerImg}) => {
 
-const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption,ownerId,ownerUsername,ownerImg}) => {
-
-  // videoUrl = "http://res.cloudinary.com/dcqgytpzz/video/upload/v1719571878/r5xp3heucxqcic8q6mll.mp4" 
 
     const [isLiked,setLiked] = useState(false);
     const [likeCnt,setlikecnt] = useState(0);
@@ -39,6 +37,7 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
     }
 
     const likedByUser = ()=>{
+        setlikecnt(likeCnt+1);
         axios.post("/api/v1/video/likedbyuser",{
           userId:localStorage.getItem("userId"), videoId:videoId 
         })
@@ -52,6 +51,7 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
     }
     
     const unlikedByUser = ()=>{
+      setlikecnt(likeCnt-1)
       axios.post("/api/v1/video/unlikedbyuser",{
         userId:localStorage.getItem("userId"), videoId:videoId 
       })
@@ -74,6 +74,7 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
          setLiked(true)
          likedByUser();
         }
+        console.log(likes, " ", likeCnt);
     };
 
     const checkSaved = async () => {
@@ -137,17 +138,70 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes=0,caption
       }
     }
 
+    const handleComments = () => {
+
+    }
+
     useEffect(() => {
+     setlikecnt(Number(likes)-1);
       checkLike();
       checkSaved();
-    }, [isSaved])
+    }, [])
     
   if(isShowingOnHome === true){
     return (
       <>
-       <div>
-        
-       </div>
+      <div className='w-[330px] md:w-[360px] md:ml-5'>
+        <div className='w-full flex  items-center justify-center'>
+        <div className='w-full flex flex-row mt-4'>
+          <Card bg={'black'} onClick={onPlayPress} className='w-full'>
+            <AspectRatio ratio={9/16} className='w-full'>
+                <video 
+                loop
+                ref={videoRef}
+                src={videoUrl}>
+                </video>
+            </AspectRatio>
+            <div>
+            <Link to={`/profile/${ownerId}`} >
+              <div className="flex flex-row pt-1">
+                  <Image className='rounded-full h-[30px] w-[30px]'
+                    src={ownerImg }
+                    alt='img'
+                  />
+                  <p className='ml-2 font-medium md:text-lg text-md text-sky-300'>@{ownerUsername || "username"}</p>
+              </div>
+            </Link>
+            <p className='text-lg text-white'>{caption}</p>
+            </div>
+          </Card>
+          
+          <div className='w-[40px] bg-transparent my-4 flex flex-col-reverse' > 
+            {
+              <MdOutlineMessage onClick={handleComments} className='md:mt-5 ml-1 text-4xl' />
+            }
+            {
+              isSaved ? (
+                <IoBookmark onClick={handleSaved} className='items-center text-4xl text-white text-center md:mt-5 mr-1' />
+              ):(
+                <IoBookmarkOutline onClick={handleSaved} className='items-center text-4xl text-center md:mt-5 mr-1'/>
+              )
+            }
+            <p className='text-center'>
+             {likeCnt}
+            </p>
+            {
+              isLiked ? (
+                  <FcLike onClick={handleLike} className='md:mt-2 ml-1 text-rose-300 text-4xl'/>
+              ):(
+                  <FcLikePlaceholder onClick={handleLike} className='md:mt-2 ml-1 text-4xl'/>
+              )
+            }
+            
+          </div>
+        </div>
+        </div>
+      </div>
       </>
     )
   }

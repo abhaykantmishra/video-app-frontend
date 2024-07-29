@@ -14,6 +14,9 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import GuestIds from "./pages/GuestIds";
+import FullVideoView from "./pages/FullVideoView";
+import CommentContextprovider from "./contexts/Comments";
+import Comments from "./components/Comments";
 
 function App() {
   const [videos,setAllVideos] = useState() 
@@ -57,6 +60,7 @@ function App() {
   
   const location = useLocation();
   return (
+    <CommentContextprovider>
     <main className='flex h-screen '>
       <Routes>
         <Route path='/guestids' element={<GuestIds />} />
@@ -73,6 +77,7 @@ function App() {
           <Route path='/search/:searchTerm' element={<Search/>} />
           <Route path='/profile/:id/*' element={<Profile />} />
           <Route path='/editprofile/:id' element={<EditProfile />} />
+          <Route path='/comments/:id' element={<Comments videoId={'668117ad0eb2c3eae8cfa5e4'} />} />
           <Route path='/detail/:id' element={<Detail videoId={location.pathname.split('/')[2]}
           videoUrl={"http://res.cloudinary.com/dcqgytpzz/video/upload/v1719120221/dhtxjexbyws1rka1vciq.mp4"}
           postedBy={'akm'}
@@ -91,6 +96,7 @@ function App() {
         </Route>
       </Routes>
     </main>
+    </CommentContextprovider>
   )
 }
 
