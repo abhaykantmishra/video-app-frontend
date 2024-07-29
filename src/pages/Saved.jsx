@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import SmallVideoCard from "../components/SmallVideoCard";
 import axios from "axios";
+import { Button } from "@chakra-ui/react";
+import NoResults from "../components/NoResults";
 
 const Saved = () => {
 
@@ -35,10 +37,11 @@ const getSavedVideos = async () => {
 }
 
 useEffect(()=>{
+  setPageLoading(true);
   getSavedVideos();
 },[])
 
-  if(videos.length === 0) {
+if(videos.length === 0 && pageLoading === false) {
   return (
       <>
      <NoResults text={'No Saved Videos Yet'} />
@@ -52,7 +55,7 @@ if(pageLoading === true){
     <div className='flex flex-col ml-[40%]'>
        <Button
           size="lg"
-          isLoading={pageLoding}
+          isLoading={pageLoading}
           loadingText='Loading'
           colorScheme='white'
           variant='filled outline'
