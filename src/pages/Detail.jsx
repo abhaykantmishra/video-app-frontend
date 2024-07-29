@@ -42,7 +42,7 @@ const Detail = () => {
   }
 
   const getVideoInfo = async () => {
-    await axios.post("/api/v1/video/getvideobyid",{videoId:videoId})
+    await axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/video/getvideobyid",{videoId:videoId})
     .then(async (res)=>{
       setVideoInfo(res.data.video);
       // console.log(res.data.video)
@@ -54,7 +54,7 @@ const Detail = () => {
 }
 
   const checkLike = async () => {
-      await axios.post('/api/v1/video/check-like',{
+      await axios.post('https://video-app-backend-s7qn.onrender.com/api/v1/video/check-like',{
         userId:localStorage.getItem("userId"),
         videoId:videoId
       }).then((res)=>{
@@ -70,7 +70,7 @@ const Detail = () => {
 
   const likedByUser = ()=>{
       setlikecnt(likeCnt+1);
-      axios.post("/api/v1/video/likedbyuser",{
+      axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/video/likedbyuser",{
         userId:localStorage.getItem("userId"), videoId:videoId 
       })
       .then((res)=>{
@@ -84,7 +84,7 @@ const Detail = () => {
   
   const unlikedByUser = ()=>{
     setlikecnt(likeCnt-1)
-    axios.post("/api/v1/video/unlikedbyuser",{
+    axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/video/unlikedbyuser",{
       userId:localStorage.getItem("userId"), videoId:videoId 
     })
     .then((res)=>{
@@ -109,7 +109,7 @@ const Detail = () => {
   };
 
   const checkSaved = async () => {
-      await axios.post('/api/v1/user/check-saved',{
+      await axios.post('https://video-app-backend-s7qn.onrender.com/api/v1/user/check-saved',{
         userId:localStorage.getItem("userId"),
         videoId:videoId
       }).then((res)=>{
@@ -124,7 +124,7 @@ const Detail = () => {
   }
 
   const savedByUser = () => {
-      axios.post("/api/v1/user/savedbyuser",{
+      axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/user/savedbyuser",{
         userId:localStorage.getItem("userId"), videoId:videoId 
       })
       .then((res)=>{
@@ -137,7 +137,7 @@ const Detail = () => {
     }
 
   const unSavedByUser = () => {
-      axios.post("/api/v1/user/unsavedbyuser",{
+      axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/user/unsavedbyuser",{
         userId:localStorage.getItem("userId"), videoId:videoId 
       })
       .then((res)=>{
