@@ -37,12 +37,8 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes,caption,o
     }
 
     const likedByUser = ()=>{
-<<<<<<< HEAD
         setlikecnt(likeCnt+1);
-        axios.post("/api/v1/video/likedbyuser",{
-=======
         axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/video/likedbyuser",{
->>>>>>> 36a3b650aef847514aef2eca052b511a4f060fa8
           userId:localStorage.getItem("userId"), videoId:videoId 
         })
         .then((res)=>{
@@ -55,12 +51,9 @@ const SmallVideoCard = ({ videoId,videoUrl,isShowingOnHome=false,likes,caption,o
     }
     
     const unlikedByUser = ()=>{
-<<<<<<< HEAD
       setlikecnt(likeCnt-1)
-      axios.post("/api/v1/video/unlikedbyuser",{
-=======
+
       axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/video/unlikedbyuser",{
->>>>>>> 36a3b650aef847514aef2eca052b511a4f060fa8
         userId:localStorage.getItem("userId"), videoId:videoId 
       })
       .then((res)=>{
