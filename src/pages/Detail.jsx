@@ -42,7 +42,8 @@ const Detail = () => {
   }
 
   const getVideoInfo = async () => {
-    await axios.post(`${import.meta.env.VITE_}/api/v1/video/getvideobyid`,{videoId:videoId})
+    // e.preventDefault();
+    await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/video/getvideobyid`,{videoId:videoId})
     .then(async (res)=>{
       setVideoInfo(res.data.video);
       // console.log(res.data.video)
@@ -54,7 +55,9 @@ const Detail = () => {
 }
 
   const checkLike = async () => {
-      await axios.post(`${import.meta.env.VITE_}/api/v1/video/check-like`,{
+      // e.preventDefault();
+      // console.log(import.meta.env.VITE_BASE_URL)
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/video/check-like`,{
         userId:localStorage.getItem("userId"),
         videoId:videoId
       }).then((res)=>{
@@ -70,7 +73,7 @@ const Detail = () => {
 
   const likedByUser = ()=>{
       setlikecnt(likeCnt+1);
-      axios.post(`${import.meta.env.VITE_}/api/v1/video/likedbyuser`,{
+      axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/video/likedbyuser`,{
         userId:localStorage.getItem("userId"), videoId:videoId 
       })
       .then((res)=>{
@@ -84,7 +87,7 @@ const Detail = () => {
   
   const unlikedByUser = ()=>{
     setlikecnt(likeCnt-1)
-    axios.post(`${import.meta.env.VITE_}/api/v1/video/unlikedbyuser`,{
+    axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/video/unlikedbyuser`,{
       userId:localStorage.getItem("userId"), videoId:videoId 
     })
     .then((res)=>{
@@ -109,7 +112,8 @@ const Detail = () => {
   };
 
   const checkSaved = async () => {
-      await axios.post(`${import.meta.env.VITE_}/api/v1/user/check-saved`,{
+      // e.preventDefault();
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/user/check-saved`,{
         userId:localStorage.getItem("userId"),
         videoId:videoId
       }).then((res)=>{
@@ -124,7 +128,7 @@ const Detail = () => {
   }
 
   const savedByUser = () => {
-      axios.post(`${import.meta.env.VITE_}/api/v1/user/savedbyuser`,{
+      axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/user/savedbyuser`,{
         userId:localStorage.getItem("userId"), videoId:videoId 
       })
       .then((res)=>{
@@ -137,7 +141,7 @@ const Detail = () => {
     }
 
   const unSavedByUser = () => {
-      axios.post(`${import.meta.env.VITE_}/api/v1/user/unsavedbyuser`,{
+      axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/user/unsavedbyuser`,{
         userId:localStorage.getItem("userId"), videoId:videoId 
       })
       .then((res)=>{
