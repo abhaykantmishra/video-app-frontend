@@ -14,8 +14,8 @@ function LoginPage() {
 
     const loginHandler = async (e) => {
         setLoading(true);
-        console.log(import.meta.env.VITE_BASE_URL)
-        await axios.post("/api/v1/user/login ", {
+        // console.log(import.meta.env.VITE_BASE_URL)
+        await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/user/login `, {
             username:email,password:password
         }).then((res)=>{
             localStorage.setItem("accessToken" , res.data.accessToken)
