@@ -12,7 +12,7 @@ const GuestIds = () => {
     const [isLoading,setLoading] = useState(false)
 
     const getAllGuestusers = async () => {
-        await axios.get("/api/v1/user/getguestusers")
+        await axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/user/getguestusers`)
         .then((res) => {
             const allGuestUsers = res.data.allGuestUsers;
             setGuestUsers(allGuestUsers)
@@ -27,7 +27,7 @@ const GuestIds = () => {
         setFormMsg('')
         setLoading(false)
         const username = e.target.id;
-        await axios.post('/api/v1/user/login' , {username:username , password:"12345678"})
+        await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/user/login` , {username:username , password:"12345678"})
         .then((res)=>{
             console.log(res.data)
             localStorage.setItem("accessToken" , res.data.accessToken)

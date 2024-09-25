@@ -9,7 +9,7 @@ const FullVideoView = () => {
     const [videoInfo,setVideoInfo] = useState([])
 
     const getVideoInfo = async () => {
-        await axios.post("/api/v1/video/getvideobyid",{videoId:videoId})
+        await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/video/getvideobyid`,{videoId:videoId})
         .then(async (res)=>{
           setVideoInfo(res.data.video);
           console.log(res.data.video)

@@ -11,8 +11,8 @@ import VideoCard from './VideoCard';
 const Search = () => {
 
   const searchTerm = useLocation().pathname.split('/')[2];
-  const allUserUrl = "/api/v1/user/allusers"
-  const allVideosUrl = "/api/v1/video/getallvideos";
+  const allUserUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/user/allusers`
+  const allVideosUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/video/getallvideos`;
 
   const [isAccounts, setIsAccounts] = useState(true);
   const [allUsers , setAllusers] = useState([]);

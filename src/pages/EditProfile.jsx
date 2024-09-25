@@ -8,7 +8,7 @@ const EditProfile = () => {
     const navigate = useNavigate();
     const uid = useLocation().pathname.split('/')[2]
 
-    const verifyUrl = '/api/v1/user/verifyuser'
+    const verifyUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/user/verifyuser`
     const [isCurrentUser,setIsCurrentUSer] = useState(false);
 
     async function checkIfCurrentUser(){
@@ -43,7 +43,7 @@ const EditProfile = () => {
     const [file,setFile] = useState();
     const [formMsg,setFormMsg] = useState("");
 
-    const editUserUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/updateprofile"
+    const editUserUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/user/updateprofile`
 
 
     async function editHandler(){

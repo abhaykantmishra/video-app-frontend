@@ -17,9 +17,9 @@ const Profile = ( ) => {
 
   const userId = useLocation().pathname.split('/')[2];
   const navigate = useNavigate();
-  const verifyUrl = '/api/v1/user/verifyuser'
-  const getUserUrl = '/api/v1/user/getanyuser'
-  const getVideosUrl = '/api/v1/user/userchannel'
+  const verifyUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/user/verifyuser`
+  const getUserUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/user/getanyuser`
+  const getVideosUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/user/userchannel`
   const [showUserVideos, setShowUserVideos] = useState(true);
   const [videosList, setVideosList] = useState([]);
   const [user , setUser] = useState({});

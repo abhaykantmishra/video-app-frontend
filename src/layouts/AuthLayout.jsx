@@ -8,7 +8,7 @@ function AuthLayout() {
     const [isAuthenticate , setAuth] = useState(false)
     const navigate = useNavigate();
     const pathname = window.location.pathname;
-    const verifyUrl = "/api/v1/user/verifyuser"
+    const verifyUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/user/verifyuser`
     useEffect( ()=>{
       const token = localStorage.getItem("accessToken");
       const userId = localStorage.getItem("userId");

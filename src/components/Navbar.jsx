@@ -25,7 +25,7 @@ const Navbar = () => {
     const addUser = ()=>{console.log("adduser function called")}
 
     const removeUser = async ()=>{
-          const logoutUrl = "/api/v1/user/logout";
+          const logoutUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/user/logout`;
           const token = localStorage.getItem("accessToken");
           if(!token){
             console.log(" No user Logged In")

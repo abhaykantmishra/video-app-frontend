@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 function PostForm( {post} ) {
     const navigate = useNavigate();
 
-    const uploadVideoUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/video/uploadvideo"
+    const uploadVideoUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/video/uploadvideo`
 
     const [isLoading,setLoading] = useState(false)
     const [formMsg,setFormMsg] = useState('');

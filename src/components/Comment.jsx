@@ -25,7 +25,7 @@ const Comment = ({comment,user}) => {
         console.log(isCommentsChanged);
         setCommentsChanged(isCommentsChanged+1);
         console.log(isCommentsChanged);
-        await axios.post('/api/v1/comment/deletecomment',{
+        await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/comment/deletecomment`,{
             commentId:comment._id
         })
         .then((res) => {
@@ -48,7 +48,7 @@ const Comment = ({comment,user}) => {
         console.log("you are replying");
         const ele = window.document.getElementById("addCommentInput");
         console.log(ele);
-        await axios.post('/api/v1/comment/addReply',{
+        await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/comment/addReply`,{
             repliedBy:postedBy,
             repliedByUsername:postedByUsername,
             userImg:userImg,
