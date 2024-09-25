@@ -8,7 +8,7 @@ const EditProfile = () => {
     const navigate = useNavigate();
     const uid = useLocation().pathname.split('/')[2]
 
-    const verifyUrl = 'https://video-app-backend-s7qn.onrender.com/api/v1/user/verifyuser'
+    const verifyUrl = '/api/v1/user/verifyuser'
     const [isCurrentUser,setIsCurrentUSer] = useState(false);
 
     async function checkIfCurrentUser(){

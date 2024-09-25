@@ -20,7 +20,7 @@ const Comments = ({videoId}) => {
   const user = JSON.parse(window.localStorage.getItem("user"))
 
   const getAllVideoComments = async () => {
-    await axios.post('https://video-app-backend-s7qn.onrender.com/api/v1/comment/getvideocomment',{videoId:videoId})
+    await axios.post('/api/v1/comment/getvideocomment',{videoId:videoId})
     .then((res) => {
       setVideoComments(res.data.comments)
       // comments =  res.data.comments;
@@ -37,7 +37,7 @@ const Comments = ({videoId}) => {
   }
 
   const addComment =async (cmtId = "") => {
-    await axios.post('https://video-app-backend-s7qn.onrender.com/api/v1/comment/createcomment',{
+    await axios.post('/api/v1/comment/createcomment',{
       postedBy:user._id,
       postedByUsername:user.username,
       userImg:user.profileImg,
@@ -56,7 +56,7 @@ const Comments = ({videoId}) => {
 
   const delelteComment = async (commentId) => {
     setCommentsChanged(isCommentsChanged-1);
-    await axios.post('https://video-app-backend-s7qn.onrender.com/api/v1/comment/deletecomment',{
+    await axios.post('/api/v1/comment/deletecomment',{
       commentId:commentId
     })
     .then((res) => {
@@ -78,7 +78,7 @@ const Comments = ({videoId}) => {
       }
     })
     if(isEditingReply && replyText.trim().length > 0){
-      await axios.post('https://video-app-backend-s7qn.onrender.com/api/v1/comment/addReply',{
+      await axios.post('/api/v1/comment/addReply',{
         commentId:commentId,
         postedBy:user._id,
         postedByUsername:user.username,

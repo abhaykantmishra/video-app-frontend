@@ -8,7 +8,7 @@ import { loginUser } from '../utils/functions';
 
 
 function SignUpPage() {
-    const signupUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/register"
+    const signupUrl = "/api/v1/user/register"
     const navigate = useNavigate();
     const [name , setName] = useState("");
     const [username , setUsername] = useState("");

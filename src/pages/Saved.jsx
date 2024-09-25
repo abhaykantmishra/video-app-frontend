@@ -12,7 +12,7 @@ const [videos , setVideos] = useState([]);
 const [pageLoading,setPageLoading] = useState(false);
 
 const getVideo = async (vidIds) => {
-  await  axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/video/getvideosbyidarray",{Ids:vidIds})
+  await  axios.post("/api/v1/video/getvideosbyidarray",{Ids:vidIds})
     .then((res) => {
       setVideos(res.data.videos);
       setPageLoading(false);
@@ -24,7 +24,7 @@ const getVideo = async (vidIds) => {
   
 const getSavedVideos = async () => {
   setPageLoading(true);
-  await axios.post('https://video-app-backend-s7qn.onrender.com/api/v1/user/getsavedvideos',{
+  await axios.post('/api/v1/user/getsavedvideos',{
     userId:localStorage.getItem('userId'),
     token:localStorage.getItem('accessToken')
   })

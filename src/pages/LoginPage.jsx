@@ -7,15 +7,15 @@ import axios from 'axios';
 
 function LoginPage() {
     const navigate = useNavigate();
-    const loginUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/login"
+    const loginUrl = "/api/v1/user/login"
     const [email , setEmail] = useState("");
     const [password , setPassword] = useState("");
     const [isLoading , setLoading] = useState(false);
 
     const loginHandler = async (e) => {
         setLoading(true);
-      
-        await axios.post("https://video-app-backend-s7qn.onrender.com/api/v1/user/login ", {
+        console.log(import.meta.env.VITE_BASE_URL)
+        await axios.post("/api/v1/user/login ", {
             username:email,password:password
         }).then((res)=>{
             localStorage.setItem("accessToken" , res.data.accessToken)
