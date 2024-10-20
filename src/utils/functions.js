@@ -1,7 +1,7 @@
 import axios from "axios";
 
 async function loginUser (username,password) {
-    const loginUrl = "https://video-app-backend-s7qn.onrender.com/api/v1/user/login"
+    const loginUrl = `${import.meta.env.VITE_BASE_URL}/api/v1/user/login`
     try {
         const res =  await axios.post(loginUrl , 
            { username:username,password:password }
